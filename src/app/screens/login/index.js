@@ -16,7 +16,16 @@ const styles = {
     alignItems: 'center'
   },
   input: {
-    marginBottom: 40
+    width: '30%'
+  },
+  img: {
+    marginBottom: 20,
+    height: 120,
+    width: 120
+  },
+  text: {
+    fontFamily: 'Avenir',
+    color: '#fff'
   }
 }
 
@@ -97,8 +106,8 @@ class Login extends Component {
         return (
             <div>
               <Row type="flex" justify="center" align="center" style={styles.row}>
-                  <Col span={12} offset={6} style={styles.col}>
-                      <img src='https://foxdale.s3.amazonaws.com/media/fox_head.png' />
+                  <Col span={12} align="center" style={styles.col}>
+                      <img src='https://foxdale.s3.amazonaws.com/media/fox_head.png' style={styles.img} />
                       <Form onSubmit={this.handleSubmit}>
                           <Form.Item>
                               {getFieldDecorator('email', {
@@ -117,7 +126,7 @@ class Login extends Component {
                                           />
                                       }
                                       placeholder="Email"
-                                      size='small'
+                                      style={styles.input}
                                   />
                               )}
                           </Form.Item>
@@ -147,15 +156,13 @@ class Login extends Component {
                               {getFieldDecorator('remember', {
                                   valuePropName: 'checked',
                                   initialValue: true
-                              })(<Checkbox>Remember me</Checkbox>)}
+                              })(<Checkbox style={styles.text}>Remember me</Checkbox>)}
                               <Row>
-                                  <Col span={4}>
-                                      <Button type="primary" htmlType="submit">
-                                          Log in
-                                      </Button>
-                                  </Col>
+                                <Button type="primary" htmlType="submit">
+                                    Log in
+                                </Button>
                               </Row>
-                              Or <div onClick={this.signUp}>register now!</div>
+                              <div onClick={this.signUp} style={styles.text}>Create New User</div>
                           </Form.Item>
                       </Form>
                   </Col>
