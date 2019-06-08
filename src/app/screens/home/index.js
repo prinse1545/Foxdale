@@ -4,8 +4,15 @@
 // Description: The home page made for foxdale blog and testimonial
 // mangement.
 import React, { Component } from 'react'
-import { Row, Col, List, Typography, Modal } from 'antd';
+import { Row, Col, List, Typography, Modal, Input } from 'antd';
 import ListHeader from '../../components/listHeader';
+import ListPanel from '../../components/listPanel';
+import { connect } from 'react-redux';
+
+import { getTestimonies, insertTestimony, deleteTestimony } from '../../actions/testimonies';
+import { loadBlogs, addBlogPost, deleteBlogPost } from '../../actions/blogs';
+
+const { TextArea } = Input;
 
 const styles = {
   container: {
@@ -23,30 +30,45 @@ const styles = {
   logoContainer: {
     paddingTop: '3%',
     marginBottom: '3%'
+  },
+  input: {
+    height: 30
   }
 }
 
-export default class Home extends Component{
+class Home extends Component{
   constructor(props) {
     super(props);
 
     this.state = {
       visible: false,
-      modalTitle: null
+      modalTitle: null,
+      subType: null,
+      placeholder: null
     }
+  }
+
+  componentDidMount = () => {
+
+    this.props.getTestimonies()
+    this.props.loadBlogs()
   }
 
   showTestModal = () => {
     this.setState({
       visible: true,
-      modalTitle: "Add Testimony"
+      modalTitle: "Add Testimony",
+      subType: 'test',
+      placeholder: 'Enter a new testimony...'
     });
   };
 
   showBlogModal = () => {
     this.setState({
       visible: true,
-      modalTitle: "Add Blog Post"
+      modalTitle: "Add Blog Post",
+      subType: 'blog',
+      placeholder: 'Enter a new blog post...'
     });
   }
 
@@ -64,8 +86,15 @@ export default class Home extends Component{
     });
   };
 
+  handleChange = e => {
+    console.log(e)
+  }
+
   render() {
-    const { visible, modalTitle } = this.state;
+    const { visible, modalTitle, placeholder } = this.state;
+    const { blogPosts, testimonies } = this.props;
+    console.log(testimonies)
+    console.log(blogPosts)
     return (
       <div style={styles.container}>
           <Row type="flex" align="center" style={styles.logoContainer}>
@@ -76,10 +105,11 @@ export default class Home extends Component{
               <List
                 header={<ListHeader header="Testimonies" onClick={this.showTestModal}/>}
                 bordered
+                dataSource={testimonies}
                 style={styles.list}
                 renderItem={item => (
                   <List.Item>
-                    <h1>hi</h1>
+                    <ListPanel text={item.testimony} />
                   </List.Item>
                 )}
               />
@@ -88,10 +118,11 @@ export default class Home extends Component{
               <List
                 header={<ListHeader header="Blog Posts" onClick={this.showBlogModal}/>}
                 bordered
+                dataSource={blogPosts}
                 style={styles.list}
                 renderItem={item => (
-                  <List.Item>
-                    <h1>hi</h1>
+                  <List.Item style={{width: 400}}>
+                    <ListPanel text={item.text} />
                   </List.Item>
                 )}
               />
@@ -103,11 +134,33 @@ export default class Home extends Component{
             onOk={this.handleOk}
             onCancel={this.handleCancel}
           >
-            <p>Some contents...</p>
-            <p>Some contents...</p>
-            <p>Some contents...</p>
+            <TextArea
+              placeholder={placeholder}
+              rows={4}
+              onChange={this.handleChnage}
+            />
           </Modal>
       </div>
     );
   }
 };
+
+const mapStateToProps = state => {
+  return {
+    testimonies: state.testimonies.testimonies,
+    blogPosts: state.blogs.blogPosts
+  }
+};
+
+const mapDispatchToProps = dispatch => ({
+  getTestimonies: () => dispatch(getTestimonies()),
+  loadBlogs: () => dispatch(loadBlogs()),
+  insertTestimony: (testimony) => dispatch(insertTestimony(testimony)),
+  addBlogPost: (blogPost) => dispatch(addBlogPost(blogPost)),
+  deleteTestimony: (testId) => dispatch(deleteTestimony(testId)),
+  deleteBlogPost: (blogId) => dispatch(deleteBlogPost(blogId))
+});
+
+const ConnectedHome = connect(mapStateToProps, mapDispatchToProps)(Home);
+
+export default ConnectedHome;
