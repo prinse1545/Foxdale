@@ -13,7 +13,11 @@ export const getTestimonies = () => {
 
       snap.docs.map((doc) => {
 
-        arr.push(doc.data())
+
+        const obj = Object.assign({_id: doc.id}, doc.data())
+
+
+        arr.push(obj)
       })
       dispatch(updateTestimonies(arr))
     }).catch((err) => {
@@ -50,12 +54,23 @@ export const deleteTestimony = testId => {
 
   return (dispatch, getState) => {
 
-
     Firebase.firestore().collection('testimonies').doc(testId).delete().then(() => {
       console.log('Documnet Sucessfully Deleted');
+      const testimonies = getState().testimonies.testimonies;
+
+      var newTest = []
+
+      testimonies.map((t) => {
+        if(t._id != testId) {
+          newTest.push(t)
+        }
+      })
+
+      dispatch(updateTestimonies(newTest))
     }).catch((err) => {
       console.log("There was an error", err)
     })
+
 
   }
 }

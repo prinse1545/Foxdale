@@ -12,7 +12,8 @@ export const loadBlogs = () => {
       var arr = []
 
       snap.docs.map((doc) => {
-        arr.push(doc.data())
+        const obj = Object.assign({_id: doc.id}, doc.data())
+        arr.push(obj)
       })
 
       dispatch(updateBlogs(arr))
@@ -52,6 +53,17 @@ export const deleteBlogPost = blogId => {
 
     Firebase.firestore().collection('testimonies').doc(blogId).delete().then(() => {
       console.log('Documnet Sucessfully Deleted');
+      const blogPosts = getState().blogs.blogPosts;
+
+      var newBlogs = []
+
+      blogPosts.map((b) => {
+        if(b._id != blogId) {
+          newBlogs.push(b)
+        }
+      })
+
+      dispatch(updateBlogs(newBlogs))
     }).catch((err) => {
       console.log("There was an error", err)
     })

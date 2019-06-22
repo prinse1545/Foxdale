@@ -50,6 +50,10 @@ const styles = {
   content: {
     fontFamily: 'Avenir',
     fontSize: 22
+  },
+  author: {
+    fontFamily: 'Avenir',
+    fontSize: 16
   }
 }
 
@@ -114,7 +118,8 @@ class Home extends Component{
 
   onClick(id) {
 
-
+    console.log(id)
+    this.props.deleteTestimony(id)
 
   }
 
@@ -131,8 +136,9 @@ class Home extends Component{
 
   render() {
     const { visible, modalTitle, placeholder } = this.state;
-    const { blogPosts, testimonies, testimonyLoading, blogLoading } = this.props;
-
+    const { blogPosts, testimonies, testimonyLoading, blogLoading, deleteBlogPost, deleteTestimony } = this.props;
+    console.log(blogPosts[0] != undefined && new Date(blogPosts[0].date))
+    console.log(testimonies[0] != undefined && testimonies[0])
     return (
       <div style={styles.container}>
           <Row type="flex" align="middle" style={styles.logoContainer}>
@@ -149,10 +155,11 @@ class Home extends Component{
                 dataSource={testimonies}
                 style={styles.list}
                 renderItem={item => (
-                  <List.Item actions={[<PanelButton text="Are you sure you wish to delete this testimony?"/>]}>
+                  <List.Item actions={[<PanelButton text="Are you sure you wish to delete this testimony?" onClick={() => this.onClick(item._id)}/>]}>
                     <Skeleton loading={testimonyLoading}>
                       <List.Item.Meta
                         title={<Typography style={styles.content}>{item.testimony}</Typography>}
+                        description={<Typography style={styles.author}>― {item.author}</Typography>}
                       />
                     </Skeleton>
                   </List.Item>
@@ -166,7 +173,7 @@ class Home extends Component{
                 dataSource={blogPosts}
                 style={styles.list}
                 renderItem={item => (
-                  <List.Item actions={[<PanelButton text="Are you sure you wish to delete this blog?"/>]}>
+                  <List.Item actions={[<PanelButton text="Are you sure you wish to delete this blog?" onClick={deleteBlogPost(item._id)}/>]}>
                     <Skeleton loading={blogLoading}>
                       <List.Item.Meta
                         title={<Typography style={styles.content}>{item.text}</Typography>}
