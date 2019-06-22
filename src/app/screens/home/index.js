@@ -4,15 +4,14 @@
 // Description: The home page made for foxdale blog and testimonial
 // mangement.
 import React, { Component } from 'react'
-import { Row, Col, List, Typography, Modal, Input } from 'antd';
+import { Row, Col, List, Typography, Modal, Input, Button, Skeleton } from 'antd';
 import ListHeader from '../../components/listHeader';
-import ListPanel from '../../components/listPanel';
+import PanelButton from '../../components/panelButton';
 import { connect } from 'react-redux';
 
-import { getTestimonies, insertTestimony, deleteTestimony } from '../../actions/testimonies';
-import { loadBlogs, addBlogPost, deleteBlogPost } from '../../actions/blogs';
+import { getTestimonies, insertTestimony, deleteTestimony, toggleTestimony } from '../../actions/testimonies';
+import { loadBlogs, addBlogPost, deleteBlogPost, toggleBlog } from '../../actions/blogs';
 
-const { TextArea } = Input;
 
 const styles = {
   container: {
@@ -25,7 +24,7 @@ const styles = {
     backgroundColor: '#fff'
   },
   list: {
-    paddingBottom: '30%'
+    paddingBottom: '30%',
   },
   logoContainer: {
     paddingTop: '3%',
@@ -33,6 +32,24 @@ const styles = {
   },
   input: {
     height: 30
+  },
+  listItem: {
+    borderColor: '#ffae19',
+    borderWidth: 1,
+    borderRadius: 10,
+  },
+  title: {
+    fontFamily: 'Avenir',
+    fontSize: 28,
+    color: '#fff',
+    marginLeft: 30
+  },
+  logo: {
+    marginLeft: 50
+  },
+  content: {
+    fontFamily: 'Avenir',
+    fontSize: 22
   }
 }
 
@@ -44,15 +61,20 @@ class Home extends Component{
       visible: false,
       modalTitle: null,
       subType: null,
-      placeholder: null
+      placeholder: null,
+      subText: null
     }
-  }
-
-  componentDidMount = () => {
-
+    //Set as loading for skeleton
+    this.props.toggleBlog()
+    this.props.toggleTestimony()
+    //Loading data
     this.props.getTestimonies()
     this.props.loadBlogs()
+    //Set as finished loading for skeleton
+    this.props.toggleBlog()
+    this.props.toggleTestimony()
   }
+
 
   showTestModal = () => {
     this.setState({
@@ -74,10 +96,27 @@ class Home extends Component{
 
   handleOk = e => {
     console.log(e);
+
+    const { subType, subText } = this.state;
+
+    switch(subType) {
+      case 'test':
+        this.props.insertTestimony(subText);
+        break;
+      case 'blog':
+        this.props.addBlogPost(subText);
+    }
+
     this.setState({
       visible: false,
     });
   };
+
+  onClick(id) {
+
+
+
+  }
 
   handleCancel = e => {
     console.log(e);
@@ -92,13 +131,15 @@ class Home extends Component{
 
   render() {
     const { visible, modalTitle, placeholder } = this.state;
-    const { blogPosts, testimonies } = this.props;
-    console.log(testimonies)
-    console.log(blogPosts)
+    const { blogPosts, testimonies, testimonyLoading, blogLoading } = this.props;
+
     return (
       <div style={styles.container}>
-          <Row type="flex" align="center" style={styles.logoContainer}>
-            <img src='https://foxdale.s3.amazonaws.com/media/fox_head.png' />
+          <Row type="flex" align="middle" style={styles.logoContainer}>
+            <img src='https://foxdale.s3.amazonaws.com/media/fox_head.png' style={styles.logo} />
+            <Typography style={styles.title}>
+              Foxdale Blog & Testimony Management
+            </Typography>
           </Row>
           <Row type="flex" style={styles.row}>
             <Col span={12}>
@@ -108,8 +149,12 @@ class Home extends Component{
                 dataSource={testimonies}
                 style={styles.list}
                 renderItem={item => (
-                  <List.Item>
-                    <ListPanel text={item.testimony} />
+                  <List.Item actions={[<PanelButton text="Are you sure you wish to delete this testimony?"/>]}>
+                    <Skeleton loading={testimonyLoading}>
+                      <List.Item.Meta
+                        title={<Typography style={styles.content}>{item.testimony}</Typography>}
+                      />
+                    </Skeleton>
                   </List.Item>
                 )}
               />
@@ -121,8 +166,12 @@ class Home extends Component{
                 dataSource={blogPosts}
                 style={styles.list}
                 renderItem={item => (
-                  <List.Item style={{width: 400}}>
-                    <ListPanel text={item.text} />
+                  <List.Item actions={[<PanelButton text="Are you sure you wish to delete this blog?"/>]}>
+                    <Skeleton loading={blogLoading}>
+                      <List.Item.Meta
+                        title={<Typography style={styles.content}>{item.text}</Typography>}
+                      />
+                    </Skeleton>
                   </List.Item>
                 )}
               />
@@ -131,14 +180,18 @@ class Home extends Component{
           <Modal
             title={modalTitle}
             visible={visible}
-            onOk={this.handleOk}
             onCancel={this.handleCancel}
+            footer={[
+              <Button key="submit" type="primary" onClick={this.handleOk}>
+                Submit
+              </Button>,
+            ]}
           >
-            <TextArea
-              placeholder={placeholder}
-              rows={4}
-              onChange={this.handleChnage}
-            />
+          <Input.TextArea
+            placeholder={placeholder}
+            rows={4}
+            onChange={(text) => console.log(text)}
+          />
           </Modal>
       </div>
     );
@@ -148,7 +201,9 @@ class Home extends Component{
 const mapStateToProps = state => {
   return {
     testimonies: state.testimonies.testimonies,
-    blogPosts: state.blogs.blogPosts
+    blogPosts: state.blogs.blogPosts,
+    testimonyLoading: state.testimonies.testimonyLoading,
+    blogLoading: state.blogs.blogLoading
   }
 };
 
@@ -158,7 +213,9 @@ const mapDispatchToProps = dispatch => ({
   insertTestimony: (testimony) => dispatch(insertTestimony(testimony)),
   addBlogPost: (blogPost) => dispatch(addBlogPost(blogPost)),
   deleteTestimony: (testId) => dispatch(deleteTestimony(testId)),
-  deleteBlogPost: (blogId) => dispatch(deleteBlogPost(blogId))
+  deleteBlogPost: (blogId) => dispatch(deleteBlogPost(blogId)),
+  toggleBlog: () => dispatch(toggleBlog()),
+  toggleTestimony: () => dispatch(toggleTestimony())
 });
 
 const ConnectedHome = connect(mapStateToProps, mapDispatchToProps)(Home);

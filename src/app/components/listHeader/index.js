@@ -39,7 +39,7 @@ export default class ListHeader extends Component {
               shape="circle"
               icon="plus"
               onClick={onClick}
-              size={26}
+              size="default"
               style={styles.button} />
           </Col>
         </Row>

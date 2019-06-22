@@ -105,7 +105,7 @@ class Login extends Component {
 
         return (
             <div>
-              <Row type="flex" justify="center" align="center" style={styles.row}>
+              <Row type="flex" justify="center" align="middle" style={styles.row}>
                   <Col span={12} align="center" style={styles.col}>
                       <img src='https://foxdale.s3.amazonaws.com/media/fox_head.png' style={styles.img} />
                       <Form onSubmit={this.handleSubmit}>
