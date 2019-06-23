@@ -4,7 +4,7 @@
 // Description: The home page made for foxdale blog and testimonial
 // mangement.
 import React, { Component } from 'react'
-import { Row, Col, List, Typography, Modal, Input, Button, Skeleton } from 'antd';
+import { Row, Col, List, Typography, Modal, Input, Button, Skeleton, Form } from 'antd';
 import ListHeader from '../../components/listHeader';
 import PanelButton from '../../components/panelButton';
 import { connect } from 'react-redux';
@@ -22,9 +22,6 @@ const styles = {
   row: {
     flexDirection: 'row',
     backgroundColor: '#fff'
-  },
-  list: {
-    paddingBottom: '30%',
   },
   logoContainer: {
     paddingTop: '3%',
@@ -54,6 +51,9 @@ const styles = {
   author: {
     fontFamily: 'Avenir',
     fontSize: 16
+  },
+  col: {
+    paddingBottom: 200
   }
 }
 
@@ -66,7 +66,8 @@ class Home extends Component{
       modalTitle: null,
       subType: null,
       placeholder: null,
-      subText: null
+      body: null,
+      author: null
     }
     //Set as loading for skeleton
     this.props.toggleBlog()
@@ -99,21 +100,30 @@ class Home extends Component{
   }
 
   handleOk = e => {
-    console.log(e);
+    e.preventDefault()
 
     const { subType, subText } = this.state;
 
-    switch(subType) {
-      case 'test':
-        this.props.insertTestimony(subText);
-        break;
-      case 'blog':
-        this.props.addBlogPost(subText);
-    }
 
-    this.setState({
-      visible: false,
-    });
+    this.props.form.validateFields((err, values) => {
+        if (!err) {
+            console.log('Received values of form: ', values)
+
+
+            switch(subType) {
+              case 'test':
+                this.props.insertTestimony({body: values.body, author: values.author});
+                break;
+              case 'blog':
+                this.props.addBlogPost(values.body);
+            }
+
+            this.setState({
+              visible: false,
+            });
+        }
+    })
+
   };
 
   onClick(id) {
@@ -135,10 +145,21 @@ class Home extends Component{
   }
 
   render() {
-    const { visible, modalTitle, placeholder } = this.state;
+    const {
+        getFieldDecorator,
+        getFieldError,
+        isFieldTouched
+    } = this.props.form
+
+    const bodyError =
+        isFieldTouched('body') && getFieldError('body')
+    const authorError =
+        isFieldTouched('author') && getFieldError('author')
+
+
+    const { visible, modalTitle, placeholder, subType } = this.state;
     const { blogPosts, testimonies, testimonyLoading, blogLoading, deleteBlogPost, deleteTestimony } = this.props;
-    console.log(blogPosts[0] != undefined && new Date(blogPosts[0].date))
-    console.log(testimonies[0] != undefined && testimonies[0])
+    console.log(blogPosts)
     return (
       <div style={styles.container}>
           <Row type="flex" align="middle" style={styles.logoContainer}>
@@ -148,12 +169,11 @@ class Home extends Component{
             </Typography>
           </Row>
           <Row type="flex" style={styles.row}>
-            <Col span={12}>
+            <Col span={12} style={styles.col}>
               <List
                 header={<ListHeader header="Testimonies" onClick={this.showTestModal}/>}
                 bordered
                 dataSource={testimonies}
-                style={styles.list}
                 renderItem={item => (
                   <List.Item actions={[<PanelButton text="Are you sure you wish to delete this testimony?" onClick={() => this.onClick(item._id)}/>]}>
                     <Skeleton loading={testimonyLoading}>
@@ -171,9 +191,8 @@ class Home extends Component{
                 header={<ListHeader header="Blog Posts" onClick={this.showBlogModal}/>}
                 bordered
                 dataSource={blogPosts}
-                style={styles.list}
                 renderItem={item => (
-                  <List.Item actions={[<PanelButton text="Are you sure you wish to delete this blog?" onClick={deleteBlogPost(item._id)}/>]}>
+                  <List.Item actions={[<PanelButton text="Are you sure you wish to delete this blog?" onClick={() => deleteBlogPost(item._id)}/>]}>
                     <Skeleton loading={blogLoading}>
                       <List.Item.Meta
                         title={<Typography style={styles.content}>{item.text}</Typography>}
@@ -188,17 +207,47 @@ class Home extends Component{
             title={modalTitle}
             visible={visible}
             onCancel={this.handleCancel}
-            footer={[
-              <Button key="submit" type="primary" onClick={this.handleOk}>
-                Submit
-              </Button>,
-            ]}
+            footer={[]}
           >
-          <Input.TextArea
-            placeholder={placeholder}
-            rows={4}
-            onChange={(text) => console.log(text)}
-          />
+            <Form onSubmit={this.handleOk}>
+              <Form.Item>
+              {getFieldDecorator('body', {
+                  rules: [
+                      {
+                          required: true,
+                          message: 'Please input some text'
+                      }
+                  ]
+              })(
+                <Input.TextArea
+                  placeholder={placeholder}
+                  rows={4}
+                />
+              )}
+              </Form.Item>
+              {
+                subType == 'test' &&
+                <Form.Item>
+                {getFieldDecorator('author', {
+                    rules: [
+                        {
+                            required: true,
+                            message: 'Please enter the author\'s name'
+                        }
+                    ]
+                })(
+                  <Input
+                    placeholder={"Enter an author\'s name"}
+                  />
+                )}
+                </Form.Item>
+              }
+              <Form.Item>
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
+              </Form.Item>
+            </Form>
           </Modal>
       </div>
     );
@@ -227,4 +276,4 @@ const mapDispatchToProps = dispatch => ({
 
 const ConnectedHome = connect(mapStateToProps, mapDispatchToProps)(Home);
 
-export default ConnectedHome;
+export default Form.create({ name: "ConnectedHome" })(ConnectedHome);

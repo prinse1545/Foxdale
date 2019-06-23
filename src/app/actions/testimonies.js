@@ -39,10 +39,29 @@ export const insertTestimony = testimony => {
 
   return (dispatch, getState) => {
 
-    Firebase.firestore().collection('testimonies').set({
+    const { body, author } = testimony;
 
-    }).then(() => {
+    const date = new Date()
+
+    Firebase.firestore().collection('testimonies').add({
+      testimony: body,
+      author: author,
+      date: date
+    }).then((doc) => {
       console.log('documnet successfully written');
+
+      const newTest = {
+        _id: doc.id,
+        testimony: body,
+        author: author,
+        date: date
+      }
+
+      var testimonies = getState().testimonies.testimonies
+
+      testimonies.push(newTest)
+
+      dispatch(updateTestimonies(testimonies))
     }).catch((err) => {
       console.log("There was an error: ", err);
     })
