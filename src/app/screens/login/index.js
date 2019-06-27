@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Layout, Row, Col, Form, Icon, Input, Button, Checkbox } from 'antd'
-import { loginWithFirebase } from '../../actions/auth'
+import { Layout, Row, Col, Form, Icon, Input, Button, Checkbox, Modal, Alert, message } from 'antd'
+import { loginWithFirebase, isUserLoggedIn } from '../../actions/auth'
 import Firebase from '../../config/Firebase'
+import SignUpForm from '../../components/signUpForm'
 
 const styles = {
   row: {
@@ -18,6 +19,9 @@ const styles = {
   input: {
     width: '30%'
   },
+  modalInput: {
+    width: '60%'
+  },
   img: {
     marginBottom: 20,
     height: 120,
@@ -30,6 +34,9 @@ const styles = {
 }
 
 
+
+
+
 class Login extends Component {
     constructor(props) {
         super(props)
@@ -37,8 +44,11 @@ class Login extends Component {
             username: '',
             password: '',
             open: false,
-            errorMessage: ''
+            errorMessage: '',
+            visible: false
         }
+
+      this.props.isUserLoggedIn()
     }
 
     handleChange = prop => event => {
@@ -59,6 +69,7 @@ class Login extends Component {
     }
 
     handleSubmit = e => {
+        const { loggedIn, history } = this.props;
         e.preventDefault()
         this.props.form.validateFields((err, values) => {
             if (!err) {
@@ -68,25 +79,48 @@ class Login extends Component {
                     password: values.password
                 }
 
-                this.props.loginWithFirebase(user)
-                this.props.history.push('/home')
-                // Firebase.auth().onAuthStateChanged(user => {
-                //     if (user) {
-                //       localStorage.setItem('authUser', JSON.stringify(user));
-                //       this.props.history.push('/home')
-                //     } else {
-                //       localStorage.removeItem('authUser');
-                //       console.log('An error has occurred')
-                //     }
-                // })
+                this.props.loginWithFirebase(user).then((user) => {
+                  history.push('/home')
+                }).catch((err) => {
+                  message.error(err.message)
+                })
+
+                this.props.form.resetFields()
 
             }
         })
     }
 
-    signUp = () => {
-      this.props.history.push('/signup')
+    handleAccountCreation = e => {
+      e.preventDefault()
+
+      this.props.form.validateFields((err, values) => {
+        if(!err) {
+
+        }
+      })
     }
+
+    signUp = () => {
+      this.setState({
+        visible: true,
+      });
+    }
+
+
+    handleOk = e => {
+      console.log(e);
+      this.setState({
+        visible: false,
+      });
+    };
+
+    handleCancel = e => {
+      console.log(e);
+      this.setState({
+        visible: false,
+      });
+    };
 
     render() {
 
@@ -102,6 +136,7 @@ class Login extends Component {
         const passwordError =
             isFieldTouched('password') && getFieldError('password')
 
+        const { visible } = this.state;
 
         return (
             <div>
@@ -167,17 +202,29 @@ class Login extends Component {
                       </Form>
                   </Col>
               </Row>
+              <Modal
+                title="Create New Account"
+                visible={visible}
+                align="center"
+                onOk={this.handleOk}
+                onCancel={this.handleCancel}
+              >
+                <SignUpForm onSubmit={this.handleAccountCreation}/>
+              </Modal>
             </div>
         )
     }
 }
 
 const mapStateToProps = state => {
-    return {}
+    return {
+      loggedIn: state.auth.loggedIn
+    }
 }
 
 const mapDispatchToProps = dispatch => ({
-    loginWithFirebase: user => dispatch(loginWithFirebase(user))
+    loginWithFirebase: user => dispatch(loginWithFirebase(user)),
+    isUserLoggedIn: () => dispatch(isUserLoggedIn()),
 })
 
 const ConnectedLogin = connect(

@@ -4,14 +4,14 @@
 // Description: The home page made for foxdale blog and testimonial
 // mangement.
 import React, { Component } from 'react'
-import { Row, Col, List, Typography, Modal, Input, Button, Skeleton, Form } from 'antd';
+import { Row, Col, List, Typography, Modal, Input, Button, Skeleton, Form, Popconfirm } from 'antd';
 import ListHeader from '../../components/listHeader';
 import PanelButton from '../../components/panelButton';
 import { connect } from 'react-redux';
-
+//Importing redux actions
 import { getTestimonies, insertTestimony, deleteTestimony, toggleTestimony } from '../../actions/testimonies';
 import { loadBlogs, addBlogPost, deleteBlogPost, toggleBlog } from '../../actions/blogs';
-
+import { logoutWithFirebase } from '../../actions/auth';
 
 const styles = {
   container: {
@@ -54,6 +54,14 @@ const styles = {
   },
   col: {
     paddingBottom: 200
+  },
+  logout: {
+    marginLeft: '50%',
+    size: 26,
+    color: '#fff',
+    borderColor: '#FF7F00',
+    borderWidth: 3,
+    backgroundColor: 'transparent'
   }
 }
 
@@ -118,6 +126,8 @@ class Home extends Component{
                 this.props.addBlogPost(values.body);
             }
 
+            this.props.form.resetFields()
+
             this.setState({
               visible: false,
             });
@@ -131,6 +141,10 @@ class Home extends Component{
     console.log(id)
     this.props.deleteTestimony(id)
 
+  }
+
+  onConfirm = () => {
+    this.props.logoutWithFirebase()
   }
 
   handleCancel = e => {
@@ -159,7 +173,9 @@ class Home extends Component{
 
     const { visible, modalTitle, placeholder, subType } = this.state;
     const { blogPosts, testimonies, testimonyLoading, blogLoading, deleteBlogPost, deleteTestimony } = this.props;
-    console.log(blogPosts)
+
+    const text = 'Are you sure you would like to logout?'
+
     return (
       <div style={styles.container}>
           <Row type="flex" align="middle" style={styles.logoContainer}>
@@ -167,6 +183,9 @@ class Home extends Component{
             <Typography style={styles.title}>
               Foxdale Blog & Testimony Management
             </Typography>
+            <Popconfirm placement="right" title={text} onConfirm={this.onConfirm} okText="Yes" cancelText="No">
+              <Button type="primary" shape="circle" icon="logout" style={styles.logout} />
+            </Popconfirm>
           </Row>
           <Row type="flex" style={styles.row}>
             <Col span={12} style={styles.col}>
@@ -271,7 +290,8 @@ const mapDispatchToProps = dispatch => ({
   deleteTestimony: (testId) => dispatch(deleteTestimony(testId)),
   deleteBlogPost: (blogId) => dispatch(deleteBlogPost(blogId)),
   toggleBlog: () => dispatch(toggleBlog()),
-  toggleTestimony: () => dispatch(toggleTestimony())
+  toggleTestimony: () => dispatch(toggleTestimony()),
+  logoutWithFirebase: () => dispatch(logoutWithFirebase()),
 });
 
 const ConnectedHome = connect(mapStateToProps, mapDispatchToProps)(Home);

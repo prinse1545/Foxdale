@@ -1,7 +1,8 @@
 
 import {
   LOG_IN,
-  LOG_OUT
+  LOG_OUT,
+  IS_LOGGED_IN
 } from '../actions/auth'
 
 
@@ -16,6 +17,8 @@ export default (state = initialState, action) => {
       return {...state, loggedIn: action.loggedIn, lastVerification: action.lastVerification}
     case LOG_OUT:
       return {...state, loggedIn: false}
+    case IS_LOGGED_IN:
+      return {...state, loggedIn: action.bool}
     default:
       return state
   }

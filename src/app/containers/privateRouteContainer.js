@@ -13,7 +13,7 @@ class PrivateRouteContainer extends Component {
 
   render() {
     const { component: Component, authenticated, ...rest } = this.props
-    console.log(authenticated)
+
     return(
       <Route
           {...rest}
