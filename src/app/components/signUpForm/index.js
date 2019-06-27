@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Input, Form, Icon } from 'antd';
+import { Input, Form, Icon, message, Button } from 'antd';
+import { accountCreationKey } from '../../../../package.json'
 
 const styles = {
   modalInput: {
@@ -13,12 +14,50 @@ const SignUpForm = (props) => {
   const { onSubmit, form } = props;
   const { getFieldDecorator } = form;
 
+  const createAccount = e => {
+
+    e.preventDefault()
+
+    props.form.validateFields((err, values) => {
+      if(!err) {
+        const info = {
+          email: values.email,
+          password: values.password
+        }
+        onSubmit(info)
+
+        props.form.resetFields()
+      }
+    })
+  }
+
+  const test = () => console.log('hi')
+
+  const validateKey = (rule, value, callback) => {
+
+    const { form } = props;
+
+    if(accountCreationKey !== form.getFieldValue('creationKey')) {
+
+      callback('The key is not correct')
+
+    }
+    else {
+      callback()
+    }
+
+  }
+
   return (
-      <Form onSubmit={onSubmit}>
+      <Form onSubmit={createAccount}>
         <Form.Item>
           {
-            getFieldDecorator('modalEmail', {
+            getFieldDecorator('email', {
               rules: [
+                {
+                  type: 'email',
+                  message: 'The input is not valid E-mail!',
+                },
                 {
                   required: true,
                   message: "Please provide an email for the new account"
@@ -39,7 +78,7 @@ const SignUpForm = (props) => {
           }
         </Form.Item>
         <Form.Item>
-            {getFieldDecorator('modalPassword', {
+            {getFieldDecorator('password', {
                 rules: [
                     {
                         required: true,
@@ -62,11 +101,14 @@ const SignUpForm = (props) => {
         </Form.Item>
         <Form.Item>
           {
-            getFieldDecorator('modalKey', {
+            getFieldDecorator('creationKey', {
               rules: [
                 {
                   required: true,
                   message: "Please provide a security key"
+                },
+                {
+                  validator: validateKey,
                 }
               ]
             })(
@@ -82,6 +124,11 @@ const SignUpForm = (props) => {
               />
             )
           }
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+              Sign Up
+          </Button>
         </Form.Item>
       </Form>
   )

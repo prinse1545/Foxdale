@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Layout, Row, Col, Form, Icon, Input, Button, Checkbox, Modal, Alert, message } from 'antd'
-import { loginWithFirebase, isUserLoggedIn } from '../../actions/auth'
+import { loginWithFirebase, isUserLoggedIn, createAccountWithFirebase } from '../../actions/auth'
 import Firebase from '../../config/Firebase'
 import SignUpForm from '../../components/signUpForm'
 
@@ -91,13 +91,17 @@ class Login extends Component {
         })
     }
 
-    handleAccountCreation = e => {
-      e.preventDefault()
+    handleAccountCreation = info => {
+      const { createAccountWithFirebase, history } = this.props;
 
-      this.props.form.validateFields((err, values) => {
-        if(!err) {
+      createAccountWithFirebase(info).then((user) => {
 
-        }
+        this.setState({visible: false})
+        history.push('/home')
+
+      }).catch((err) => {
+        this.setState({visible: false})
+        message.error(err.message)
       })
     }
 
@@ -206,8 +210,8 @@ class Login extends Component {
                 title="Create New Account"
                 visible={visible}
                 align="center"
-                onOk={this.handleOk}
                 onCancel={this.handleCancel}
+                footer={[]}
               >
                 <SignUpForm onSubmit={this.handleAccountCreation}/>
               </Modal>
@@ -225,6 +229,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     loginWithFirebase: user => dispatch(loginWithFirebase(user)),
     isUserLoggedIn: () => dispatch(isUserLoggedIn()),
+    createAccountWithFirebase: (accountInfo) => dispatch(createAccountWithFirebase(accountInfo))
 })
 
 const ConnectedLogin = connect(

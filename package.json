@@ -2,6 +2,7 @@
   "name": "foxdale",
   "version": "0.1.0",
   "private": true,
+  "accountCreationKey": "80WXGBCI84JXQFEE",
   "dependencies": {
     "antd": "^3.19.2",
     "firebase": "^6.1.0",

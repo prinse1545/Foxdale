@@ -4,7 +4,6 @@ import Firebase from '../config/Firebase'
 export const LOG_IN = "LOG_IN"
 export const LOG_OUT = "LOG_OUT"
 export const IS_LOGGED_IN = "IS_LOGGED_IN"
-export const CREATE_ACCOUNT = "CREATE_ACCOUNT"
 
 export const loginWithFirebase = loginInfo => (dispatch) => {
 
@@ -13,7 +12,7 @@ export const loginWithFirebase = loginInfo => (dispatch) => {
       loggedIn: true,
       lastVerification: new Date()
     }
-    console.log(data)
+
     Firebase.auth().signInWithEmailAndPassword(loginInfo.username, loginInfo.password).then((user) => {
       resolve(user)
       dispatch(login(data))
@@ -34,17 +33,24 @@ export const isUserLoggedIn = () => {
   }
 }
 
-export const createAccountWithFirebase = accountInfo => {
+export const createAccountWithFirebase = accountInfo => (dispatch) => {
 
+  return new Promise((resolve, reject) => {
 
-  Firebase.auth().createUserWithEmailAndPassword(accountInfo.email, accountInfo.password).catch((error) => {
-
-    if(error) {
-      console.log(error)
+    const data = {
+      loggedIn: true,
+      lastVerification: new Date()
     }
-    else{
-      console.log("AYY")
-    }
+
+    Firebase.auth().createUserWithEmailAndPassword(accountInfo.email, accountInfo.password).then((user) => {
+
+      resolve(user)
+      dispatch(login(data))
+    }).catch((err) => {
+      
+      reject(err)
+      dispatch(login({loggedIn: false, lastVerification: null}))
+    })
   })
 
 }
