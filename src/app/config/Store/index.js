@@ -20,7 +20,7 @@ const sagaMiddleware = createSagaMiddleware();
 const middleware = [thunk, sagaMiddleware];
 
 if (process.env.NODE_ENV === 'development') {
-  //middleware.push(logger);
+  // middleware.push(logger);
 
 }
 

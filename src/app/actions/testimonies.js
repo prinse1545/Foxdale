@@ -8,7 +8,7 @@ export const getTestimonies = () => {
 
   return (dispatch) => {
 
-    Firebase.firestore().collection('testimonies').limit(20).get().then((snap) => {
+    Firebase.firestore().collection('testimonies').get().then((snap) => {
       var arr = []
 
       snap.docs.map((doc) => {
@@ -50,18 +50,24 @@ export const insertTestimony = testimony => {
     }).then((doc) => {
       console.log('documnet successfully written');
 
-      const newTest = {
+      const addedTest = {
         _id: doc.id,
         testimony: body,
         author: author,
         date: date
       }
 
-      var testimonies = getState().testimonies.testimonies
+      const testimonies = getState().testimonies.testimonies
 
-      testimonies.push(newTest)
+      var newTest = []
 
-      dispatch(updateTestimonies(testimonies))
+      testimonies.map((test) => {
+        newTest.push(test)
+      })
+
+      newTest.push(addedTest)
+
+      dispatch(updateTestimonies(newTest))
     }).catch((err) => {
       console.log("There was an error: ", err);
     })

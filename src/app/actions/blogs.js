@@ -7,7 +7,7 @@ export const loadBlogs = () => {
 
   return (dispatch) => {
 
-    Firebase.firestore().collection('blogPosts').limit(20).get().then((snap) => {
+    Firebase.firestore().collection('blogPosts').get().then((snap) => {
 
       var arr = []
 
@@ -50,11 +50,17 @@ export const addBlogPost = blogPost => {
         text: blogPost,
         date: date
       }
-      var blogPosts = getState().blogs.blogPosts
+      const blogPosts = getState().blogs.blogPosts
 
-      blogPosts.push(newBlog)
+      var newBlogPosts = []
 
-      dispatch(updateBlogs(blogPosts))
+      blogPosts.map((bp) => {
+        newBlogPosts.push(bp)
+      })
+
+      newBlogPosts.push(newBlog)
+
+      dispatch(updateBlogs(newBlogPosts))
 
     }).catch((err) => {
       console.log("There was an error: ", err);

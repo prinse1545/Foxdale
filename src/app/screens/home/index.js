@@ -175,7 +175,7 @@ class Home extends Component{
     const { blogPosts, testimonies, testimonyLoading, blogLoading, deleteBlogPost, deleteTestimony } = this.props;
 
     const text = 'Are you sure you would like to logout?'
-
+    console.log(testimonies)
     return (
       <div style={styles.container}>
           <Row type="flex" align="middle" style={styles.logoContainer}>
