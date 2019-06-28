@@ -1,9 +1,9 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Foxdale Blogs & Testimonies",
+  "name": "Foxdale Blogs & Testimonies Management",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "https://foxdale.s3.amazonaws.com/media/fox_head.png",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     }
