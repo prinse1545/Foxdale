@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import Firebase from './config/Firebase';
 import { onAuthenticated, onUnAuthenticated } from './actions/user';
 import PrivateRouteContainer from './containers/privateRouteContainer';
+import LoginRouteContainer from './containers/loginRouteContainer';
 import Login from './screens/login';
 import Home from './screens/home';
 
@@ -25,21 +26,24 @@ class App extends Component {
   constructor(props) {
       super(props)
 
+      const loggedIn = Boolean(localStorage.getItem("loggedIn"))
+
       this.state = {
-          loggedIn: false
+          loggedIn: loggedIn
       }
 
 
       Firebase.auth().onAuthStateChanged(user => {
           if (user) {
-              this.props.onAuthenticated(user)
+              localStorage.setItem("loggedIn", true)
               this.setState({ loggedIn: true })
           } else {
-              this.props.onUnAuthenticated()
+              localStorage.setItem("loggedIn", false)
               this.setState({ loggedIn: false })
           }
       })
   }
+
 
   render() {
       const { loggedIn } = this.state;
@@ -48,7 +52,7 @@ class App extends Component {
         <div>
             <Router>
                 <div>
-                    <Route exact path="/" component={Login} />
+                    <LoginRouteContainer exact path="/" component={Login} authenticated={!loggedIn} />
                     <PrivateRouteContainer exact path="/home" component={Home} authenticated={loggedIn} />
                 </div>
             </Router>

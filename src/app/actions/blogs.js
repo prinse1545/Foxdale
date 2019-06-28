@@ -13,7 +13,7 @@ export const loadBlogs = () => {
 
       snap.docs.map((doc) => {
         const obj = Object.assign({_id: doc.id}, doc.data())
-        console.log(obj)
+
         arr.push(obj)
       })
 
@@ -44,7 +44,7 @@ export const addBlogPost = blogPost => {
       date: date
     }).then((doc) => {
       console.log('documnet successfully written');
-      console.log(doc.id)
+
       const newBlog = {
         _id: doc.id,
         text: blogPost,
