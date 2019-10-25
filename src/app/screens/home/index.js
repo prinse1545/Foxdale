@@ -123,7 +123,21 @@ class Home extends Component{
                 this.props.insertTestimony({body: values.body, author: values.author});
                 break;
               case 'blog':
-                this.props.addBlogPost(values.body);
+
+                const len = values.body.length
+                let newString = ""
+
+                for(var i = 0; i < len; i++) {
+                  if(values.body.charCodeAt(i) == 10) {
+                    newString += "<br>"
+                  }
+                  else {
+                    newString += values.body.charAt(i)
+                  }
+
+                }
+                console.log(newString)
+                this.props.addBlogPost(newString);
             }
 
             this.props.form.resetFields()
@@ -149,6 +163,7 @@ class Home extends Component{
 
   handleCancel = e => {
     console.log(e);
+    this.props.form.resetFields()
     this.setState({
       visible: false,
     });
