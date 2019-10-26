@@ -1,3 +1,9 @@
+// Philipp Moura Srivastava
+// 4 Juni 2019
+// Filename: signUpForm/index.js
+// Description: A signup form for the foxdale testimonial management site
+// +++++++++++++++++++++++++++++++++++++
+
 import React, { Component } from 'react';
 import { Input, Form, Icon, message, Button } from 'antd';
 import { accountCreationKey } from '../../../../package.json'

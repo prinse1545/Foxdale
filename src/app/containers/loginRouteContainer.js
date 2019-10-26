@@ -1,3 +1,8 @@
+// Philipp Moura Srivastava
+// 4 Juni 2019
+// Filename: LoginRouteContainer.js
+// Description: defines route to login page
+// ++++++++++++++++++++++++++++++++++++++++++++++
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 

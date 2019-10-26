@@ -1,4 +1,8 @@
-
+// Philipp Moura Srivastva
+// 4 Juni 2019
+// Filename: Store/index.js
+// Description: This initializes the redux store
+// ++++++++++++++++++++++++++++++++++++++++++++++
 import { createStore, applyMiddleware } from 'redux';
 import logger from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';

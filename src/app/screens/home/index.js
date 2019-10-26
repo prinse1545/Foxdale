@@ -13,57 +13,8 @@ import { getTestimonies, insertTestimony, deleteTestimony, toggleTestimony } fro
 import { loadBlogs, addBlogPost, deleteBlogPost, toggleBlog } from '../../actions/blogs';
 import { logoutWithFirebase } from '../../actions/auth';
 
-const styles = {
-  container: {
-    backgroundColor: '#ffae19',
-    height: 960,
-    width: '100%'
-  },
-  row: {
-    flexDirection: 'row',
-    backgroundColor: '#fff'
-  },
-  logoContainer: {
-    paddingTop: '3%',
-    marginBottom: '3%'
-  },
-  input: {
-    height: 30
-  },
-  listItem: {
-    borderColor: '#ffae19',
-    borderWidth: 1,
-    borderRadius: 10,
-  },
-  title: {
-    fontFamily: 'Avenir',
-    fontSize: 28,
-    color: '#fff',
-    marginLeft: 30
-  },
-  logo: {
-    marginLeft: 50
-  },
-  content: {
-    fontFamily: 'Avenir',
-    fontSize: 22
-  },
-  author: {
-    fontFamily: 'Avenir',
-    fontSize: 16
-  },
-  col: {
-    paddingBottom: 200
-  },
-  logout: {
-    marginLeft: '50%',
-    size: 26,
-    color: '#fff',
-    borderColor: '#FF7F00',
-    borderWidth: 3,
-    backgroundColor: 'transparent'
-  }
-}
+import styles from './styles';
+
 
 class Home extends Component{
   constructor(props) {
@@ -90,6 +41,15 @@ class Home extends Component{
 
 
   showTestModal = () => {
+    // Method: showTestModal, shows testimonial Modal to add testimonies
+    //
+    // Parameter(s):
+    //
+    //   None
+    //
+    // Return Value(s):
+    //
+    //   None
     this.setState({
       visible: true,
       modalTitle: "Add Testimony",
@@ -99,6 +59,15 @@ class Home extends Component{
   };
 
   showBlogModal = () => {
+    // Method: showBlogModal, shows blog Modal to add blog posts
+    //
+    // Parameter(s):
+    //
+    //   None
+    //
+    // Return Value(s):
+    //
+    //   None
     this.setState({
       visible: true,
       modalTitle: "Add Blog Post",
@@ -108,19 +77,28 @@ class Home extends Component{
   }
 
   handleOk = e => {
+    // Method: handleOk, handles adding blog post or tesimony
+    //
+    // Parameter(s):
+    //
+    //   e - event (passed in automtaically)
+    //
+    // Return Value(s):
+    //
+    //   None
     e.preventDefault()
 
     const { subType, subText } = this.state;
 
-
+    //Validating fields using thsi.props.form
     this.props.form.validateFields((err, values) => {
         if (!err) {
             console.log('Received values of form: ', values)
 
-
+            //Switch case either blog or testimony
             switch(subType) {
               case 'test':
-                this.props.insertTestimony({body: values.body, author: values.author});
+                this.props.insertTestimony({body: values.body, author: values.author}); //Adding testimony
                 break;
               case 'blog':
 
@@ -137,10 +115,10 @@ class Home extends Component{
 
                 }
                 console.log(newString)
-                this.props.addBlogPost(newString);
+                this.props.addBlogPost(newString); // Adding blog post
             }
 
-            this.props.form.resetFields()
+            this.props.form.resetFields() // Reseting fields
 
             this.setState({
               visible: false,
@@ -151,18 +129,43 @@ class Home extends Component{
   };
 
   onClick(id) {
+    // Method: onClick, deletes testimony
+    //
+    // Parameter(s):
+    //
+    //   None
+    //
+    // Return Value(s):
+    //
+    //   None
 
-    console.log(id)
     this.props.deleteTestimony(id)
 
   }
 
   onConfirm = () => {
+    // Method: onConfirm, confirms logout and logs user out
+    //
+    // Parameter(s):
+    //
+    //   None
+    //
+    // Return Values(s):
+    //
+    //   None
     this.props.logoutWithFirebase()
   }
 
   handleCancel = e => {
-    console.log(e);
+    // Method: handles cancel on adding blog or testimony modal
+    //
+    // Parameter(s):
+    //
+    //   e - event(passed in automtaically)
+    //
+    // Return Value(s):
+    //
+    //   None
     this.props.form.resetFields()
     this.setState({
       visible: false,
@@ -190,7 +193,7 @@ class Home extends Component{
     const { blogPosts, testimonies, testimonyLoading, blogLoading, deleteBlogPost, deleteTestimony } = this.props;
 
     const text = 'Are you sure you would like to logout?'
-    console.log(testimonies)
+
     return (
       <div style={styles.container}>
           <Row type="flex" align="middle" style={styles.logoContainer}>
@@ -202,8 +205,8 @@ class Home extends Component{
               <Button type="primary" shape="circle" icon="logout" style={styles.logout} />
             </Popconfirm>
           </Row>
-          <Row type="flex" style={styles.row}>
-            <Col span={12} style={styles.col}>
+          <Row type="flex" justify = "space-between" style={styles.row}>
+            <Col span={11} style={styles.col}>
               <List
                 header={<ListHeader header="Testimonies" onClick={this.showTestModal}/>}
                 bordered
@@ -220,7 +223,7 @@ class Home extends Component{
                 )}
               />
             </Col>
-            <Col span={12}>
+            <Col span={11}>
               <List
                 header={<ListHeader header="Blog Posts" onClick={this.showBlogModal}/>}
                 bordered
@@ -309,6 +312,9 @@ const mapDispatchToProps = dispatch => ({
   logoutWithFirebase: () => dispatch(logoutWithFirebase()),
 });
 
+
+//Connecting redux
 const ConnectedHome = connect(mapStateToProps, mapDispatchToProps)(Home);
 
+// Exporting module with form
 export default Form.create({ name: "ConnectedHome" })(ConnectedHome);

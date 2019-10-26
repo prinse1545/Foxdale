@@ -1,4 +1,8 @@
-
+// Philipp Moura Srivastava
+// 4 Juni 2019
+// Filename: auth.js
+// Description: reducer for auth
+// +++++++++++++++++++++++++++++
 import {
   LOG_IN,
   LOG_OUT,

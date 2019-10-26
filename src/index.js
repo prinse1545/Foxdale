@@ -1,3 +1,8 @@
+// Philipp Moura Srivastva
+// 4 Juni 2019
+// Filename: index.js
+// Description: renders app to dom
+// +++++++++++++++++++++++++++++++++
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux'

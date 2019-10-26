@@ -1,3 +1,8 @@
+// Philipp Moura Srivastava
+// 4 Juni 2019
+// Filename: testimonies.js
+// Description: reducer for testimonies
+// +++++++++++++++++++++++++++++
 import { UPDATE_TESTIMONIES, TOGGLE_TESTIMONY_LOADING } from '../actions/testimonies';
 
 const initialState = {

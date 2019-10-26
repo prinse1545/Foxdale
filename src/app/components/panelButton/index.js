@@ -1,3 +1,15 @@
+// Philipp Moura Srivastava
+// 4 Juni 2019
+// Filename: panelButton/index.js
+// Description: A delete button for the individual testimony and blog panels
+// Props:
+//
+//   text - the text for pop confirm
+//   onClick - the method triggered when
+//             button is clicked
+// +++++++++++++++++++++++++++++++++++++
+
+
 import React from 'react';
 import {
   Popconfirm,

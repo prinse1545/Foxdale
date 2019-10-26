@@ -1,6 +1,10 @@
+// Philipp Moura Srivastava
+// 4 Juni 2019
+// Filename: LoginRouteContainer.js
+// Description: defines route to home page
+// ++++++++++++++++++++++++++++++++++++++++++++++
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { onAuthenticated, onUnAuthenticated } from '../actions/user'
 import { Redirect, Route } from 'react-router-dom'
 import Firebase from '../config/Firebase'
 
@@ -37,11 +41,5 @@ class PrivateRouteContainer extends Component {
 
 
 
-const mapDispatchToProps = dispatch => ({
-    onAuthenticated: user => dispatch(onAuthenticated(user)),
-    onUnAuthenticated: () => dispatch(onUnAuthenticated())
-})
 
-const ConnectedPrivateRouteContainer = connect(null, mapDispatchToProps)(PrivateRouteContainer)
-
-export default ConnectedPrivateRouteContainer
+export default PrivateRouteContainer

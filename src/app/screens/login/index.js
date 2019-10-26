@@ -1,3 +1,8 @@
+// Philipp Moura Srivastava
+// 4 Juni 2019
+// Filename: home/index.js
+// Description: The login page made for foxdale blog and testimonial
+// mangement.
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Layout, Row, Col, Form, Icon, Input, Button, Checkbox, Modal, Alert, message } from 'antd'
@@ -5,33 +10,7 @@ import { loginWithFirebase, isUserLoggedIn, createAccountWithFirebase } from '..
 import Firebase from '../../config/Firebase'
 import SignUpForm from '../../components/signUpForm'
 
-const styles = {
-  row: {
-    backgroundColor: '#ffae19',
-    paddingTop: '2%',
-    paddingBottom: '8%'
-  },
-  col: {
-    marginTop: '12%',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  input: {
-    width: '30%'
-  },
-  modalInput: {
-    width: '60%'
-  },
-  img: {
-    marginBottom: 20,
-    height: 120,
-    width: 120
-  },
-  text: {
-    fontFamily: 'Avenir',
-    color: '#fff'
-  }
-}
+import styles from './styles'
 
 
 
@@ -51,53 +30,89 @@ class Login extends Component {
       this.props.isUserLoggedIn()
     }
 
-    handleChange = prop => event => {
-        this.setState({ [prop]: event.target.value })
-    }
 
     handleClose = (event, reason) => {
+      // Method: handleClose, handles closing modal
+      //
+      // Parameter(s):
+      //
+      //   event - the event
+      //   reason - reason for closure
+      //
+      // Return Value(s):
+      //
+      //   None
         if (reason === 'clickaway') {
             return
         }
 
-        this.setState({ open: false })
+        this.setState({ open: false }) //Changing modal
     }
 
 
     hasErrors = fieldsError => {
+      // Method: hasErrors, checks if form has errors
+      //
+      // Parameter(s):
+      //
+      //   fieldsError - error for fields
+      //
+      // Return Value(s):
+      //
+      //   None
         return Object.keys(fieldsError).some(field => fieldsError[field])
     }
 
     handleSubmit = e => {
+      // Method: handleSubmit, handles login
+      //
+      // Parameter(s):
+      //
+      //   e - event
+      //   and uses props of loggedIn and history
+      //
+      // Return Value(s):
+      //
+      //   None
         const { loggedIn, history } = this.props;
         e.preventDefault()
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 console.log('Received values of form: ', values)
+                //Creating user object
                 const user = {
                     username: values.email,
                     password: values.password
                 }
-
+                //Logging in with firebase
                 this.props.loginWithFirebase(user).then((user) => {
-                  history.push('/home')
+                  history.push('/home')//Changing history
                 }).catch((err) => {
                   message.error(err.message)
                 })
 
-                this.props.form.resetFields()
+                this.props.form.resetFields()//Reseting fields
 
             }
         })
     }
 
     handleAccountCreation = info => {
+      // Method: handleAccountCreation, handles creating account
+      //
+      // Parameter(s):
+      //
+      //   info - object containing email and password as fields
+      //
+      // Return Value(s):
+      //
+      //   None
       const { createAccountWithFirebase, history } = this.props;
-
+      //Creating account with firebase
       createAccountWithFirebase(info).then((user) => {
 
         this.setState({visible: false})
-        history.push('/home')
+        history.push('/home')//Changing history
 
       }).catch((err) => {
         this.setState({visible: false})
@@ -106,21 +121,32 @@ class Login extends Component {
     }
 
     signUp = () => {
+      // Method: signUp, toggle modal so user can sign up
+      //
+      // Parameter(s):
+      //
+      //   None
+      //
+      // Return Value(s):
+      //
+      //   None
       this.setState({
         visible: true,
       });
     }
 
 
-    handleOk = e => {
-      console.log(e);
-      this.setState({
-        visible: false,
-      });
-    };
 
     handleCancel = e => {
-      console.log(e);
+      // Method: handleCancel, handles cancel onSignup modal (toggles it)
+      //
+      // Parameter(s):
+      //
+      //  e - event passed automtaically
+      //
+      // Return Value(s):
+      //
+      //   None
       this.setState({
         visible: false,
       });
@@ -143,7 +169,7 @@ class Login extends Component {
         const { visible } = this.state;
 
         return (
-            <div>
+            <div style={styles.container}>
               <Row type="flex" justify="center" align="middle" style={styles.row}>
                   <Col span={12} align="center" style={styles.col}>
                       <img src='https://foxdale.s3.amazonaws.com/media/fox_head.png' style={styles.img} />
@@ -232,9 +258,13 @@ const mapDispatchToProps = dispatch => ({
     createAccountWithFirebase: (accountInfo) => dispatch(createAccountWithFirebase(accountInfo))
 })
 
+
+//Connecting redux
 const ConnectedLogin = connect(
     mapStateToProps,
     mapDispatchToProps
 )(Login)
 
+
+//Exporting module with form
 export default Form.create({ name: 'ConnectedLogin' })(ConnectedLogin)

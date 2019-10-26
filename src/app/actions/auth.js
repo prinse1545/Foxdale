@@ -1,4 +1,8 @@
-
+// Philipp Moura Srivastava
+// 4 Juni 2019
+// Filename: auth.js
+// Description: Implements firebase authentication actions
+// +++++++++++++++++++++++++++++++++++++
 import Firebase from '../config/Firebase'
 
 export const LOG_IN = "LOG_IN"
@@ -6,6 +10,13 @@ export const LOG_OUT = "LOG_OUT"
 export const IS_LOGGED_IN = "IS_LOGGED_IN"
 
 export const loginWithFirebase = loginInfo => (dispatch) => {
+  // Action: loginWithFirebase, a function that logs user into firebase and updates the reducer
+  //
+  // Parameter(s):
+  //
+  //   object - loginInfo with fields username and password
+  //
+
 
   return new Promise((resolve, reject) => {
     const data = {
@@ -25,6 +36,13 @@ export const loginWithFirebase = loginInfo => (dispatch) => {
 }
 
 export const isUserLoggedIn = () => {
+  // Action: isUserLoggedIn, checks if user is logged in and updates the reducer
+  //
+  // Parameter(s):
+  //
+  //   None
+  //
+
 
   return (dispatch) => {
     const user = Firebase.auth();
@@ -34,6 +52,13 @@ export const isUserLoggedIn = () => {
 }
 
 export const createAccountWithFirebase = accountInfo => (dispatch) => {
+  // Action: createAccountWithFirebase, creates account with firebase and updates the reducer
+  //
+  // Parameter(s):
+  //
+  //   accountInfo - object with fields email and password
+  //
+
 
   return new Promise((resolve, reject) => {
 
@@ -47,7 +72,7 @@ export const createAccountWithFirebase = accountInfo => (dispatch) => {
       resolve(user)
       dispatch(login(data))
     }).catch((err) => {
-      
+
       reject(err)
       dispatch(login({loggedIn: false, lastVerification: null}))
     })
@@ -56,6 +81,13 @@ export const createAccountWithFirebase = accountInfo => (dispatch) => {
 }
 
 export const logoutWithFirebase = () => {
+  // Action: logoutWithFirebase, action that logs out of firebase and updates the reducer
+  //
+  // Parameter(s):
+  //
+  //   None
+  //
+
   return (dispatch) => {
 
     Firebase.auth().signOut().then((error) => {

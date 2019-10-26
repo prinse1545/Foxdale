@@ -1,9 +1,20 @@
+// Philipp Moura Srivastava
+// 4 Juni 2019
+// Filename: blogs.js
+// Description: Implements blog related actions
+// +++++++++++++++++++++++++++++++++++++
 import Firebase from '../config/Firebase';
 
 export const UPDATE_BLOGS = "UPDATE_BLOGS";
 export const TOGGLE_BLOG_LOADING = "TOGGLE_BLOG_LOADING";
 
 export const loadBlogs = () => {
+  // Action: loadBlogs, action that loads the blogs and updates the reducer
+  //
+  // Parameter(s):
+  //
+  //   None
+  //
 
   return (dispatch) => {
 
@@ -27,14 +38,22 @@ export const loadBlogs = () => {
 }
 
 export const toggleBlog = () => {
-
+  // Action: toggleBlog, toggles loading icon and updates the reducer
+  //
+  // Parameter(s):
+  //
+  //   None
   return (dispatch) => {
     dispatch(toggleBlogLoading())
   }
 }
 
 export const addBlogPost = blogPost => {
-
+  // Action: addBlogPost, action that addsBlogPost and updates the reducer
+  //
+  // Parameter(s):
+  //
+  //   blogPost - a string that is the blogPost
   return (dispatch, getState) => {
 
     const date = new Date()
@@ -70,7 +89,11 @@ export const addBlogPost = blogPost => {
 }
 
 export const deleteBlogPost = blogId => {
-
+  // Action: deleteBlogPost, delered blog post and updates the reducer
+  //
+  // Parameter(s):
+  //
+  //   blogId - the id of the blog
   return (dispatch, getState) => {
 
     Firebase.firestore().collection('blogPosts').doc(blogId).delete().then(() => {

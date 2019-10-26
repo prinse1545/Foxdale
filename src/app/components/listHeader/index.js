@@ -4,6 +4,13 @@
 // Description: a header component to be used for the lists
 // displaying the current testimonies and blog posts which
 // will allow for the addition of testimonies and blog posts
+// Props:
+//
+//   header - the text on the panel
+//   onClick - on Plus button clicked, to add testimony
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
 import React, { Component } from 'react';
 import { Col, Row, Icon, Typography, Button } from 'antd';
 

@@ -1,3 +1,8 @@
+// Philipp Moura Srivastva
+// 4 Juni 2019
+// Filename: Firebase/index.js
+// Description: This initializes a firebase instance
+// ++++++++++++++++++++++++++++++++++++++++++++++
 import * as firebase from 'firebase'
 
 

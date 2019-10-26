@@ -1,3 +1,8 @@
+// Philipp Moura Srivastava
+// 4 Juni 2019
+// Filename: blogs.js
+// Description: reducer for blog
+// +++++++++++++++++++++++++++++
 import { UPDATE_BLOGS, TOGGLE_BLOG_LOADING } from '../actions/blogs';
 
 const initialState = {

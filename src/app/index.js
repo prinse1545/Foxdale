@@ -15,7 +15,6 @@ import {
 } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Firebase from './config/Firebase';
-import { onAuthenticated, onUnAuthenticated } from './actions/user';
 import PrivateRouteContainer from './containers/privateRouteContainer';
 import LoginRouteContainer from './containers/loginRouteContainer';
 import Login from './screens/login';
@@ -61,14 +60,5 @@ class App extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  onAuthenticated: user => dispatch(onAuthenticated(user)),
-  onUnAuthenticated: () => dispatch(onUnAuthenticated())
-})
 
-const ConnectedApp = connect(
-  null,
-  mapDispatchToProps
-)(App)
-
-export default ConnectedApp
+export default App

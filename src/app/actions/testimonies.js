@@ -1,10 +1,19 @@
+// Philipp Moura Srivastava
+// 4 Juni 2019
+// Filename: testimonies.js
+// Description: Implements actions related to testimonies
+// +++++++++++++++++++++++++++++++++++++
 import Firebase from '../config/Firebase'
 
 export const UPDATE_TESTIMONIES = "UPDATE_TESTIMONIES";
 export const TOGGLE_TESTIMONY_LOADING = "TOGGLE_TESTIMONY_LOADING";
 
 export const getTestimonies = () => {
-
+  // Action: getTestimonies, action that loads testimonials and updates the reducer
+  //
+  // Parameter(s):
+  //
+  //   None
 
   return (dispatch) => {
 
@@ -29,6 +38,11 @@ export const getTestimonies = () => {
 }
 
 export const toggleTestimony = () => {
+  // Action: toggleTestimony, toggles loading icon on frontend  and updates the reducer
+  //
+  // Parameter(s):
+  //
+  //   None
 
   return (dispatch) => {
     dispatch(toggleTestimonyLoading())
@@ -36,6 +50,11 @@ export const toggleTestimony = () => {
 }
 
 export const insertTestimony = testimony => {
+  // Action: insertTestimony, action that inserts testimony  and updates the reducer
+  //
+  // Parameter(s):
+  //
+  //   testimony - object that includes body and author as fields
 
   return (dispatch, getState) => {
 
@@ -76,6 +95,12 @@ export const insertTestimony = testimony => {
 }
 
 export const deleteTestimony = testId => {
+  // Action: deleteTestimony, action that deletes testimony and updates the reducer
+  //
+  // Parameter(s):
+  //
+  //   testId - the id of the testimonial
+
 
   return (dispatch, getState) => {
 
